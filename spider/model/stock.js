@@ -1,9 +1,9 @@
 const Common = require('./common');
 class Stock extends Common {
-    static tableName = global.CONFIG.TABLE_PREFIX + 'STOCK';
-    constructor() {
-        super()
+    constructor(tableName) {
+        super(tableName)
     }
 }
-
-module.exports = Stock;
+const tableName = global.CONFIG.TABLE_PREFIX + 'STOCK';
+const stock = new Stock(tableName)
+module.exports = stock;

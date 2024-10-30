@@ -1,36 +1,41 @@
 
 class Info {
-    static tableName = global.CONFIG.TABLE_PREFIX + 'INFO';
-    static model = {
-        '表名': '',
-        '状态': '',
-        '更新时间': '',
-        '总数': '',
-        '成功': '',
-        '失败': ''
+    constructor(tableName) {
+        this.tableName = tableName;
+        this.model = {
+            '表名': '',
+            '状态': '',
+            '更新时间': '',
+            '总数': '',
+            '成功': '',
+            '失败': ''
+        }
     }
-
-    static createTable() {
-        const execSql = global.TOOL.getTableCreateSqlFromCloumn(Info.model, [], '表名');
+    createTable() {
+        const execSql = global.TOOL.getTableCreateSqlFromCloumn(this.model, [], '表名');
         const sqlStr = `
-        CREATE TABLE IF NOT EXISTS ${Info.tableName} (
+        CREATE TABLE IF NOT EXISTS ${this.tableName} (
         ${execSql}
         )
        `;
         return global.SQL.query(sqlStr);
     }
-    static async startUpdate(tableName) {
+    async startUpdate(tableName) {
         const model = {
             '表名': tableName,
             '状态': '1'
         }
-        await Info._update(model);
+        await this._update(model);
     }
-    static async getStatus(tableName) {
-        const status = await global.SQL.query(`SELECT * FROM ${Info.tableName} WHERE ${global.TOOL.getPinYin('表名')} = '${tableName}' `);
-        return status.length > 0 ? status[0]: null
-    }    
-    static async inUpdate(tableName, total, success, fail) {
+    async resetStatus() {
+        const execSql = `UPDATE ${Info.tableName} SET ${global.TOOL.getPinYin('表名')} = '0'`;
+        await global.SQL.query(execSql);
+    }
+    async getStatus(tableName) {
+        const status = await global.SQL.query(`SELECT * FROM ${this.tableName} WHERE ${global.TOOL.getPinYin('表名')} = '${tableName}' `);
+        return status.length > 0 ? status[0] : null
+    }
+    async inUpdate(tableName, total, success, fail) {
         const model = {
             '表名': tableName,
             '状态': '1',
@@ -38,25 +43,39 @@ class Info {
             '成功': success + '',
             '失败': fail + ''
         }
-        await Info._update(model);
+        await this._update(model);
     }
 
-    static async updated(tableName, total, success, fail) {
+    async updated(tableName, total, success, fail) {
         const model = {
             '表名': tableName,
             '状态': '2',
-            '更新时间': global.DAYJS.format('YYYY-MM-DD HH:mm:ss'),
+            '更新时间': global.DAYJS().format('YYYY-MM-DD HH:mm:ss'),
             '总数': total + '',
             '成功': success + '',
             '失败': fail + ''
         }
-        await Info._update(model);
+        await this._update(model);
     }
-    static async _update(model) {
+
+    async updateError(tableName, total, success, fail) {
+        const model = {
+            '表名': tableName,
+            '状态': '0',
+            '更新时间': global.DAYJS().format('YYYY-MM-DD HH:mm:ss'),
+            '总数': total + '',
+            '成功': success + '',
+            '失败': fail + ''
+        }
+        await this._update(model);
+    }
+    async _update(model) {
         const { keySql, valSql } = global.TOOL.getTablInsertSqlFromCloumn(model);
-        const execSql = `REPLACE INTO ${Info.tableName} (${keySql}) VALUES ${valSql}`;
+        const execSql = `REPLACE INTO ${this.tableName} (${keySql}) VALUES ${valSql}`;
         await global.SQL.query(execSql);
     }
 }
 
-module.exports = Info
+const tableName = global.CONFIG.TABLE_PREFIX + 'INFO';
+const info = new Info(tableName);
+module.exports = info
