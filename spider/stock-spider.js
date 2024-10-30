@@ -20,11 +20,25 @@ async function getStockList() {
   }
 }
 
-async function getStockHistory(symbol, startDate, endDate) {
-  const info = (await Info.getStatus(Stock.tableName)) || {};
+async function getStockHistory() {
+  const endDate = global.DAYJS().format("YYYYMMDD");
+  const startDate = '20000101';
+  const info = (await Info.getStatus(StockHistory.tableName)) || {};
   if (info.ZHUANGTAI == '1' || (info.ZHUANGTAI == '2' && global.DAYJS(info.GENGXINSHIJIAN).format("YYYY-MM-DD") == global.DAYJS().format("YYYY-MM-DD"))) {
     return
   }
+  try {
+    await Info.startUpdate(StockHistory.tableName);
+    
+    // await Info.updated(StockHistory.tableName, 1, 1, 0);
+  } catch(error) {
+    await Info.updateError(StockHistory.tableName, 1, 0, 1);
+    return Promise.reject(error);
+  }
+  // 10条每轮，首先先获取数量，
+  // 然后每一轮查出10条
+  // 循坏执行
+
   // endDate = DAYJS().format('YYYYMMDD');
   // startDate = '20150516'
   // return global.HTTP.get(`/api/public/stock_zh_a_hist?period=daily&symbol=${symbol}&start_date=${startDate}&end_date=${endDate}&adjust=hfq`)
