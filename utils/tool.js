@@ -1,5 +1,6 @@
 const PINYIN = require('pinyin-pro');
 const PATH = require('path');
+
 function getPinYin(chineseName) {
     // 获取拼音
     const pinyinName = PINYIN.pinyin(chineseName, { toneType: "none", type: "array" });

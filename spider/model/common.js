@@ -1,7 +1,7 @@
 
 class Common {
     constructor(tableName) {
-        this.tableName = tableName;
+        this.tableName = global.CONFIG.TABLE_PREFIX + tableName;
     }
     createTable(column, indexKeys = [], uniqueKey = '') {
         const execSql = global.TOOL.getTableCreateSqlFromCloumn(column, indexKeys, uniqueKey);
@@ -63,6 +63,12 @@ class Common {
             keyMap,
             list
         };
+    }
+
+    async hasTable() {
+        const execSql = `SHOW TABLES LIKE '${this.tableName}'`;
+        const tableList = await global.SQL.query(execSql);
+        return tableList.length > 0 ? true: false;
     }
 }
 module.exports = Common

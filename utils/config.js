@@ -5,5 +5,6 @@ module.exports = {
   DB_URL: 'mysql.amdyes.asia',
   DB_NAME: 'STOCK',
   TABLE_PREFIX:'T_',
-  SERVER_PORT: 12345
+  SERVER_PORT: 12345,
+  SPIDER_GAP: 5000
 };

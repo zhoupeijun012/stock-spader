@@ -1,7 +1,7 @@
 
 class Info {
     constructor(tableName) {
-        this.tableName = tableName;
+        this.tableName = global.CONFIG.TABLE_PREFIX + tableName;
         this.model = {
             '表名': '',
             '状态': '',
@@ -28,7 +28,7 @@ class Info {
         await this._update(model);
     }
     async resetStatus() {
-        const execSql = `UPDATE ${Info.tableName} SET ${global.TOOL.getPinYin('表名')} = '0'`;
+        const execSql = `UPDATE ${this.tableName} SET ${global.TOOL.getPinYin('状态')} = '0'`;
         await global.SQL.query(execSql);
     }
     async getStatus(tableName) {
@@ -76,6 +76,6 @@ class Info {
     }
 }
 
-const tableName = global.CONFIG.TABLE_PREFIX + 'INFO';
+const tableName = 'INFO';
 const info = new Info(tableName);
 module.exports = info
