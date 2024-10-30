@@ -56,6 +56,7 @@ function useDataBase(dbName) {
   }
 
 async function query(sql, dbName = CONFIG.DB_NAME) {
+  console.log(sql);
   if (status == 0) {
     await connect();
     await createDataBase(dbName);
