@@ -1,4 +1,4 @@
-require('./utils/index');
+// require('./utils/index');
 // const Info = require(global.TOOL.resolvePath('spider/model/info.js'));
 // const stockSpider = require(global.TOOL.resolvePath("spider/stock-spider"));
 
