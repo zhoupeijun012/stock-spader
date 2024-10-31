@@ -25,6 +25,5 @@ async function exec() {
 
     // }
 } 
-exec()
 // 当前时间的秒值为 下午3点时执行任务，如：2018-7-8 13:25:10
-// schedule.scheduleJob('0 0 15 * * *', exec);
+schedule.scheduleJob('0 0 15 * * *', exec);
