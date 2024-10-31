@@ -7,7 +7,7 @@ function getPinYin(chineseName) {
     return pinyinName.join('').toLocaleUpperCase();
 }
 function resolvePath(path = '') {
-    return PATH.resolve(process.cwd(), path);
+    return PATH.resolve(__dirname,'../', path);
 }
 function getTableCreateSqlFromCloumn(column, indexKeys = [], uniqueKey = '') {
     if (Array.isArray(column) && column.length > 0) {
